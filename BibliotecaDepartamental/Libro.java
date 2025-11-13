@@ -59,7 +59,7 @@ public class Libro {
     }
 
     // Método para mostrar la información del libro
-    @Override
+    
     public String toString() {
         return "Título: " + titulo +
                " | Autor: " + autor +

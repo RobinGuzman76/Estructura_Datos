@@ -133,7 +133,7 @@ public class BibliotecaApp {
         String categoria = sc.nextLine().trim();
 
         libros.add(new Libro(titulo, autor, isbn, categoria));
-        System.out.println("✅ Libro registrado exitosamente.");
+        System.out.println("Libro registrado exitosamente.");
     }
 
     public static void listarLibros() {
@@ -154,7 +154,7 @@ public class BibliotecaApp {
         String nombre = leerSoloLetras("Ingrese el nombre del usuario: ");
 
         usuarios.add(new Usuario(nombre, identificacion));
-        System.out.println("✅ Usuario registrado exitosamente.");
+        System.out.println("Usuario registrado exitosamente.");
     }
 
     public static void listarUsuarios() {

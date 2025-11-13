@@ -28,7 +28,7 @@ public class GestionLibros {
 
         Libro nuevoLibro = new Libro(titulo, autor, isbn, categoria);
         listaLibros.add(nuevoLibro);
-        System.out.println("✔ Libro agregado correctamente.");
+        System.out.println("Libro agregado correctamente.");
     }
 
     // Leer (Mostrar todos los libros)
@@ -72,7 +72,7 @@ public class GestionLibros {
             libro.setCategoria(nuevaCategoria);
         }
 
-        System.out.println("✔ Libro actualizado correctamente.");
+        System.out.println("Libro actualizado correctamente.");
     }
 
     // Eliminar libro
@@ -87,7 +87,7 @@ public class GestionLibros {
         }
 
         listaLibros.remove(libro);
-        System.out.println("✔ Libro eliminado correctamente.");
+        System.out.println("Libro eliminado correctamente.");
     }
 
     // Buscar por título
@@ -157,7 +157,7 @@ public class GestionLibros {
         }
 
         libro.setDisponible(!libro.isDisponible());
-        System.out.println("✔ Disponibilidad actualizada: " +
+        System.out.println("Disponibilidad actualizada: " +
                 (libro.isDisponible() ? "Disponible" : "No disponible"));
     }
 }

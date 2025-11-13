@@ -27,7 +27,7 @@ public class GestionUsuarios {
         Usuario nuevo = new Usuario(nombre, id);
         listaUsuarios.add(nuevo);
 
-        System.out.println("✔ Usuario registrado correctamente.");
+        System.out.println("Usuario registrado correctamente.");
     }
 
     // Mostrar usuarios con Iterator
@@ -71,13 +71,13 @@ public class GestionUsuarios {
     // Validar que el libro sí existe
     Libro libro = gestionLibros.buscarLibroPorIsbn(isbn);
     if (libro == null) {
-        System.out.println("❌ No existe un libro registrado con ese ISBN.");
+        System.out.println("No existe un libro registrado con ese ISBN.");
         return;
     }
 
     // Validar disponibilidad
     if (!libro.isDisponible()) {
-        System.out.println("❌ El libro no está disponible para préstamo.");
+        System.out.println("El libro no está disponible para préstamo.");
         return;
     }
 
@@ -88,7 +88,7 @@ public class GestionUsuarios {
     // Cambiar disponibilidad del libro
     libro.setDisponible(false);
 
-    System.out.println("✔ Préstamo registrado correctamente.");
+    System.out.println("Préstamo registrado correctamente.");
 }
     // Mostrar historial de préstamos
     public void mostrarHistorialPrestamos() {
