@@ -1,14 +1,25 @@
 package BibliotecaDepartamental;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Aplicación principal de la biblioteca.
+ * Contiene menús para la gestión de libros y usuarios y funciones de
+ * validación de entrada para facilitar la experiencia por consola.
+ */
 public class BibliotecaApp {
 
-    private static ArrayList<Libro> libros = new ArrayList<>();
-    private static ArrayList<Usuario> usuarios = new ArrayList<>();
+    // Scanner compartido para leer entrada desde consola en toda la app
     private static Scanner sc = new Scanner(System.in);
+    // Gestor de acciones para poder deshacer operaciones transaccionales
+    private static Accion acciones = new Accion();
+    // Instancias de los gestores de dominio (libros y usuarios)
+    private static GestionLibros gestionLibros = new GestionLibros(acciones);
+    private static GestionUsuarios gestionUsuarios = new GestionUsuarios(acciones);
 
+    /**
+     * Punto de entrada de la aplicación: muestra el menú principal.
+     */
     public static void main(String[] args) {
         int opcion;
         do {
@@ -37,6 +48,9 @@ public class BibliotecaApp {
     }
 
     // ---------------- MENÚ DE LIBROS ----------------
+    /**
+     * Muestra el menú de gestión de libros y delega operaciones a GestionLibros.
+     */
     public static void menuLibros() {
         int opcion;
         do {
@@ -48,6 +62,7 @@ public class BibliotecaApp {
             System.out.println("5. Buscar por título");
             System.out.println("6. Buscar por autor");
             System.out.println("7. Cambiar disponibilidad por ISBN");
+            System.out.println("8. Deshacer última acción");
             System.out.println("0. Volver al menú principal");
             System.out.print("Seleccione una opción: ");
 
@@ -55,25 +70,28 @@ public class BibliotecaApp {
 
             switch (opcion) {
                 case 1:
-                    registrarLibro();  // Ya creado
+                    gestionLibros.agregarLibro();
                     break;
                 case 2:
-                    listarLibros();   // Ya creado
+                    gestionLibros.mostrarLibros();
                     break;
                 case 3:
-                    System.out.println("Función 'Actualizar libro' pendiente por implementar.");
+                    gestionLibros.actualizarLibro();
                     break;
                 case 4:
-                    System.out.println("Función 'Eliminar libro' pendiente por implementar.");
+                    gestionLibros.eliminarLibro();
                     break;
                 case 5:
-                    System.out.println("Función 'Buscar por título' pendiente por implementar.");
+                    gestionLibros.buscarPorTitulo();
                     break;
                 case 6:
-                    System.out.println("Función 'Buscar por autor' pendiente por implementar.");
+                    gestionLibros.buscarPorAutor();
                     break;
                 case 7:
-                    System.out.println("Función 'Cambiar disponibilidad' pendiente por implementar.");
+                    gestionLibros.cambiarDisponibilidad();
+                    break;
+                case 8:
+                    acciones.deshacerUltimaAccion();
                     break;
                 case 0:
                     System.out.println("Volviendo al menú principal...");
@@ -85,14 +103,21 @@ public class BibliotecaApp {
     }
 
     // ---------------- MENÚ DE USUARIOS ----------------
+    /**
+     * Muestra el menú de gestión de usuarios y delega operaciones a GestionUsuarios.
+     */
     public static void menuUsuarios() {
         int opcion;
         do {
             System.out.println("\n===== MÓDULO 2: GESTIÓN DE USUARIOS =====");
             System.out.println("1. Registrar usuario");
             System.out.println("2. Mostrar usuarios");
-            System.out.println("3. Registrar préstamo");
-            System.out.println("4. Mostrar historial de préstamos");
+            System.out.println("3. Actualizar usuario");
+            System.out.println("4. Eliminar usuario");
+            System.out.println("5. Registrar préstamo");
+            System.out.println("6. Devolver libro");
+            System.out.println("7. Mostrar historial de préstamos");
+            System.out.println("8. Deshacer última acción");
             System.out.println("0. Volver al menú principal");
             System.out.print("Seleccione una opción: ");
 
@@ -100,16 +125,28 @@ public class BibliotecaApp {
 
             switch (opcion) {
                 case 1:
-                    registrarUsuario();  // Ya creado
+                    gestionUsuarios.agregarUsuario();
                     break;
                 case 2:
-                    listarUsuarios();   // Ya creado
+                    gestionUsuarios.mostrarUsuarios();
                     break;
                 case 3:
-                    System.out.println("Función 'Registrar préstamo' pendiente por implementar.");
+                    gestionUsuarios.actualizarUsuario();
                     break;
                 case 4:
-                    System.out.println("Función 'Mostrar historial de préstamos' pendiente por implementar.");
+                    gestionUsuarios.eliminarUsuario();
+                    break;
+                case 5:
+                    gestionUsuarios.registrarPrestamo(gestionLibros);
+                    break;
+                case 6:
+                    gestionUsuarios.devolverPrestamo(gestionLibros);
+                    break;
+                case 7:
+                    gestionUsuarios.mostrarHistorialPrestamos();
+                    break;
+                case 8:
+                    acciones.deshacerUltimaAccion();
                     break;
                 case 0:
                     System.out.println("Volviendo al menú principal...");
@@ -120,56 +157,13 @@ public class BibliotecaApp {
         } while (opcion != 0);
     }
 
-    // ---------------- FUNCIONES EXISTENTES (quedan igual) ----------------
-
-    public static void registrarLibro() {
-        System.out.println("\n--- REGISTRO DE LIBRO ---");
-
-        String isbn = leerSoloNumeros("Ingrese el ISBN del libro: ");
-        String titulo = leerSoloLetras("Ingrese el título del libro: ");
-        String autor = leerSoloLetras("Ingrese el autor del libro: ");
-
-        System.out.print("Ingrese la categoría del libro: ");
-        String categoria = sc.nextLine().trim();
-
-        libros.add(new Libro(titulo, autor, isbn, categoria));
-        System.out.println("Libro registrado exitosamente.");
-    }
-
-    public static void listarLibros() {
-        if (libros.isEmpty()) {
-            System.out.println("No hay libros registrados.");
-            return;
-        }
-        System.out.println("\n--- LISTA DE LIBROS ---");
-        for (Libro libro : libros) {
-            System.out.println(libro);
-        }
-    }
-
-    public static void registrarUsuario() {
-        System.out.println("\n--- REGISTRO DE USUARIO ---");
-
-        String identificacion = leerSoloNumeros("Ingrese la identificación del usuario: ");
-        String nombre = leerSoloLetras("Ingrese el nombre del usuario: ");
-
-        usuarios.add(new Usuario(nombre, identificacion));
-        System.out.println("Usuario registrado exitosamente.");
-    }
-
-    public static void listarUsuarios() {
-        if (usuarios.isEmpty()) {
-            System.out.println("No hay usuarios registrados.");
-            return;
-        }
-        System.out.println("\n--- LISTA DE USUARIOS ---");
-        for (Usuario u : usuarios) {
-            System.out.println("Nombre: " + u.getNombre() + " | Identificación: " + u.getIdentificacion());
-        }
-    }
-
     // ---------------- VALIDACIONES ----------------
 
+    /**
+     * Lee una opción numérica del usuario. Rechaza entradas no numéricas.
+     *
+     * @return número entero representando la opción seleccionada
+     */
     public static int leerOpcionNumerica() {
         String entrada = sc.nextLine().trim();
         while (!entrada.matches("\\d+")) {
@@ -179,6 +173,13 @@ public class BibliotecaApp {
         return Integer.parseInt(entrada);
     }
 
+    /**
+     * Lee una cadena que contenga solo números. Repite hasta recibir
+     * una entrada válida.
+     *
+     * @param mensaje texto que se muestra antes de la lectura
+     * @return cadena de dígitos
+     */
     public static String leerSoloNumeros(String mensaje) {
         String entrada;
         do {
@@ -192,6 +193,13 @@ public class BibliotecaApp {
         return entrada;
     }
 
+    /**
+     * Lee una cadena que contenga solo letras (y espacios). Repite hasta
+     * recibir una entrada válida.
+     *
+     * @param mensaje texto que se muestra antes de la lectura
+     * @return cadena con solo letras y espacios
+     */
     public static String leerSoloLetras(String mensaje) {
         String entrada;
         do {
